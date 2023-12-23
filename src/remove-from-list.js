@@ -23,7 +23,22 @@ const { ListNode } = require('../extensions/list-node.js');
  * }
  */
 function removeKFromList(l, k) {
-  throw new NotImplementedError('Not implemented');
+
+  if (l.value === k) {
+    l = l.next
+  }
+
+  let currentList = l;
+
+  while (currentList && currentList.next) {
+      if (currentList.next.value === k) {
+          currentList.next = currentList.next.next;
+      } else {
+          currentList = currentList.next;
+      }
+  }
+
+  return l;
 }
 
 module.exports = {
