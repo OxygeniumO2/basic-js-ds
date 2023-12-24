@@ -1,6 +1,6 @@
 const { NotImplementedError } = require('../extensions/index.js');
 
-// const { Node } = require('../extensions/list-tree.js');
+const { Node } = require('../extensions/list-tree.js');
 
 /**
 * Implement simple binary search tree according to task description
@@ -8,39 +8,117 @@ const { NotImplementedError } = require('../extensions/index.js');
 */
 class BinarySearchTree {
 
+  constructor() {
+    this.rootNode = null;
+  }
+
   root() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.rootNode;
   }
 
-  add(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  add(data) {
+    this.rootNode = addData(this.rootNode, data)
   }
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  has(data) {
+    return searchData(this.rootNode, data, 'has');
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  find(data) {
+    return searchData(this.rootNode, data, 'find')
   }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  remove(data) {
+    this.rootNode = removeData(this.rootNode, data);
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    let currNode = this.rootNode;
+    while (currNode) {
+      if (!currNode.left) {
+        return currNode.data;
+      }
+      currNode = currNode.left;
+    }
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    let currNode = this.rootNode;
+    while (currNode) {
+      if (!currNode.right) {
+        return currNode.data;
+      }
+      currNode = currNode.right;
+    }
+  }
+}
+
+function addData(node, data) {
+  if (!node) {
+    return new Node(data);
+  }
+
+  if (node.data === data) {
+    return node;
+  }
+
+  if (data < node.data) {
+    node.left = addData(node.left, data);
+  }
+  else {
+    node.right = addData(node.right, data);
+  }
+
+  return node;
+
+}
+
+function searchData(node, data, findParam) {
+  if (!node) {
+    return findParam === 'find' ? null : false;
+  }
+
+  if (node.data === data) {
+    return findParam === 'find' ? node : true;
+  }
+
+  return data < node.data ? searchData(node.left, data, findParam) : searchData(node.right, data, findParam);
+}
+
+function removeData(node, data) {
+  if (!node) {
+    return null;
+  }
+
+  if (data < node.data) {
+    node.left = removeData(node.left, data);
+    return node;
+  }
+  else if (data > node.data) {
+    node.right = removeData(node.right, data);
+    return node;
+  }
+  else {
+
+    if (!node.left && !node.right) {
+      return null;
+    }
+    if (!node.left) {
+      return node.right;
+    }
+    if (!node.right) {
+      return node.left;
+    }
+
+    let maxFromLeft = node.left;
+    while (maxFromLeft.right) {
+      maxFromLeft = maxFromLeft.right;
+    }
+
+    node.data = maxFromLeft.data;
+    node.left = removeData(node.left, maxFromLeft.data);
+
+    return node;
   }
 }
 
